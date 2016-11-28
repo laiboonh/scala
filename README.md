@@ -76,6 +76,32 @@ r1: StringBuilder = Hello World
 scala> val r2 = x.append(" World")
 r2: StringBuilder = Hello World World
 ```
+####Exception handling expressions are not RT
+```scala
+def failingFn(x: Int): Int = {
+  val y: Int = throw new Exception("fail")
+  try {
+    val x = 42 + 5
+    x + y
+  } catch {
+    case e: Exception => 43
+  }
+}
+
+failingFn(12) //exception
+
+def failingFn2(x: Int): Int = {
+  try {
+    val x = 42 + 5
+    x + ((throw new Exception("fail")):Int)
+  } catch {
+    case e: Exception => 43
+  }
+}
+
+failingFn2(12) //43
+```
+
 # Parametric Polymorphism
 ```scala
 def findFirst[A](as:Array[A])(p: A => Boolean) : Int = {
