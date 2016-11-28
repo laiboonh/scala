@@ -28,12 +28,12 @@ object List {
   */
   def setHead[A](as: List[A], head: A): List[A] = as match {
     case Nil => Nil
-    case Cons(x, xs) => Cons(head, xs)
+    case Cons(_, xs) => Cons(head, xs)
   }
 
   def drop[A](l: List[A], n: Int): List[A] = l match {
     case Nil => Nil
-    case Cons(x, xs) =>
+    case Cons(_, xs) =>
       if (n > 0) drop(xs, n - 1)
       else l
   }
@@ -42,9 +42,10 @@ object List {
 
   def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match {
     case Nil => Nil
-    case Cons(x, xs) => f(x) match {
-      case true => dropWhile(xs, f)
-      case false => l
+    case Cons(x, xs) => if (f(x)) {
+      dropWhile(xs, f)
+    } else {
+      l
     }
   }
 
@@ -89,13 +90,13 @@ object List {
         foldLeft(xs,f(z,x))(f)
     }
 
-  def sum2(ns:List[Int]) = foldRight(ns,0)((x,y)=>x+y)
-  def product2(ns:List[Int]) = foldRight(ns,1)(_ * _)
-  def length2(ns:List[Int]) = foldRight(ns,0)((_,y)=>y+1)
+  def sum2(ns:List[Int]): Int = foldRight(ns,0)((x, y)=>x+y)
+  def product2(ns:List[Int]): Int = foldRight(ns,1)(_ * _)
+  def length2(ns:List[Int]): Int = foldRight(ns,0)((_, y)=>y+1)
 
-  def sum3(ns:List[Int]) = foldLeft(ns,0)(_ + _)
-  def product3(ns:List[Int]) = foldLeft(ns,1)(_ * _)
-  def length3(ns:List[Int]) = foldLeft(ns,0)((y,_)=>y+1)
+  def sum3(ns:List[Int]): Int = foldLeft(ns,0)(_ + _)
+  def product3(ns:List[Int]): Int = foldLeft(ns,1)(_ * _)
+  def length3(ns:List[Int]): Int = foldLeft(ns,0)((y, _)=>y+1)
 
   def reverse2[A](ns:List[A]):List[A] =
     foldLeft(ns,Nil:List[A])((z,a)=>Cons(a,z))
@@ -109,7 +110,7 @@ object List {
 
   def range(from:Int,to:Int):List[Int] =
     if (from < to)
-      Cons(from, range((from+1),to))
+      Cons(from, range(from + 1,to))
     else Nil
 
   def append[A](as:List[A], ass:List[A]):List[A] =
@@ -133,7 +134,7 @@ object List {
   def filter2[A](as:List[A])(f:A=>Boolean):List[A] =
     flatMap(as)((a)=>if(f(a)) List(a) else Nil)
 
-  def zipWith[A](as:List[A],bs:List[A])(f:(A,A)=>A) = {
+  def zipWith[A](as:List[A],bs:List[A])(f:(A,A)=>A): List[A] = {
     def go(as: List[A], bs: List[A], acc: List[A]): List[A] = (as, bs) match {
       case (Nil, _) => acc
       case (_, Nil) => acc
@@ -152,7 +153,7 @@ object List {
   def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = sup match {
     case Nil => sub == Nil
     case _ if startsWith(sup, sub) => true
-    case Cons(h,t) => hasSubsequence(t, sub)
+    case Cons(_,t) => hasSubsequence(t, sub)
   }
 
 
@@ -162,7 +163,7 @@ def zipIntList(as:List[Int],bs:List[Int]):List[Int] = {
   def go(as:List[Int],bs:List[Int],acc:List[Int]): List[Int] = (as,bs) match {
     case (Nil,_) => acc
     case (_,Nil) => acc
-    case (Cons(x,xs), Cons(y,ys)) => Cons((x+y),go(xs,ys,acc))
+    case (Cons(x,xs), Cons(y,ys)) => Cons(x + y,go(xs,ys,acc))
   }
   go(as,bs,Nil:List[Int])
 }
