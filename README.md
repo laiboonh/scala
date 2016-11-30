@@ -128,3 +128,33 @@ def Try[A](a: => A): Option[A] =
     case e: Exception => None
   }   
 ```
+
+# Lazy vs Strict Evaluation
+#### Thunk is actually a function with no parameters. Instance of Function0[+R] (R for return type)
+```scala
+def maybeTwice(x: () => Int):Int = {
+  x() + x()
+}
+
+maybeTwice(() => {println("hi"); 1+42})
+```
+#### Terse syntax. Thunk is being evaluated everytime it is being called inside the method
+```scala
+def maybeTwice(x: => Int):Int = x+x
+
+maybeTwice({println("hi"); 1+42})
+//hi
+//hi
+//res0: Int = 86
+```
+#### If you do not want to have to recompute thunk everytime its called, cache it
+```scala
+def maybeTwice(x: => Int):Int = {
+  lazy val cache = x
+  cache+cache
+}
+
+maybeTwice({println("hi"); 1+42})
+//hi
+//res0: Int = 86
+```
