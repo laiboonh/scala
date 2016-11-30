@@ -114,3 +114,17 @@ def findFirst[A](as:Array[A])(p: A => Boolean) : Int = {
   go(0)
 }
 ```
+
+# Lift
+#### lift ordinary functions to become functions that operate on Option
+```scala
+def lift[A, B](f: A => B): Option[A] => Option[B] = _ map f
+```
+#### Convert an exception based API to an Option based API
+```scala
+def Try[A](a: => A): Option[A] =
+  try Some(a)
+  catch {
+    case e: Exception => None
+  }   
+```
