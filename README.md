@@ -1,3 +1,39 @@
+# Class private field vs. Object private field
+```scala
+class Foo {
+  private val bar:Int = 23
+  private[this] val baz:Int = 42
+  
+  def sum(other:Foo):Int = bar + other.bar
+  def sum2(other:Foo):Int = baz + other.baz //inaccessible
+}
+``` 
+# Type projection
+```scala
+import scala.collection.mutable.ArrayBuffer
+
+class Network(name:String) { outer => //
+  class Member(val name:String) {
+    val contacts = new ArrayBuffer[Network#Member] //type projection
+    override val toString = s"${Network.this.name} : $name"
+  }
+  private val members = new ArrayBuffer[Member]
+
+  def join(name:String):Member = {
+    val m = new Member(name)
+    members += m
+    m
+  }
+}
+
+val linkedIn = new Network("LinkedIn")
+val facebook = new Network("Facebook")
+
+val alice = linkedIn.join("Alice")
+val bob = facebook.join("Bob")
+alice.contacts += bob //wouldn't be possible if not for type projection
+```
+
 # Algebraic data types
 #### An ADT is a data type defined by one or more data constructors, each of which may contain zero or more arguments 
 ```scala
