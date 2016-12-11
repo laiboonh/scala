@@ -34,6 +34,56 @@ val bob = facebook.join("Bob")
 alice.contacts += bob //wouldn't be possible if not for type projection
 ```
 
+# Traits
+#### Instantiating traits creates an anonymous class that extends the trait and then creates an instance of that anonymous class
+```scala
+trait Foo {
+  def bar:String
+}
+new Foo {
+  val bar = "Foo"
+}
+```
+
+#### Compose simple traits without extending the traits
+```scala
+trait Foo {
+  def bar:String
+}
+
+class Bar
+
+new Bar with Foo {
+  val bar:String = "Bar"
+}
+```
+
+#### Mixin in a trait that extends a class `Foo` into `Bar` requires `Bar` to extend class `Foo` as well 
+```scala
+abstract class Foo 
+
+trait FooBar extends Foo {
+  def bar:String
+}
+
+// class Bar //does not compile
+class Bar extends Foo //compiles
+
+new Bar with FooBar {
+  val bar:String = "Bar"
+}
+```
+
+# Self-type
+#### self-type brings all the methods of Notifier to the scope of the AlarmNotifier trait and also requires that any class that mixes in AlarmNotifier should also mix in Notifier
+```scala
+trait AlarmNotifier {
+  this:Notifier =>
+  
+  def trigger():String
+}
+```
+
 # Algebraic data types
 #### An ADT is a data type defined by one or more data constructors, each of which may contain zero or more arguments 
 ```scala
