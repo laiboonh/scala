@@ -75,13 +75,17 @@ new Bar with FooBar {
 ```
 
 # Self-type
-#### self-type brings all the methods of Notifier to the scope of the AlarmNotifier trait and also requires that any class that mixes in AlarmNotifier should also mix in Notifier
+#### self-type requires that any class that mixes in Bar should also mix in Foo
 ```scala
-trait AlarmNotifier {
-  this:Notifier =>
-  
-  def trigger():String
+trait Foo {
+
 }
+
+trait Bar {
+  this:Foo =>
+}
+
+class Baz extends Bar with Foo
 ```
 
 # Algebraic data types
