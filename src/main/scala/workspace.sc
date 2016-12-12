@@ -1,9 +1,10 @@
-trait Foo {
-
+class Foo {
+  protected val bar:Int = 32
+}
+class Bar {
+  new Foo().bar
+}
+class Baz extends Foo {
+  override def toString:String = s"I am a fool & $bar"
 }
 
-trait Bar {
-  this:Foo =>
-}
-
-class Baz extends Foo with Bar

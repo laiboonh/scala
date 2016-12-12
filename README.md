@@ -1,3 +1,42 @@
+# Access modifiers
+### Field access modifier
+```scala
+class Foo {
+  protected val bar:Int = 32
+}
+class Bar {
+  new Foo().bar //cannot access bar because protected value can be only seen at subclasses
+}
+class Baz extends Foo {
+  override def toString:String = s"I am a fool & $bar"
+}
+```
+#### Package access modifier
+```scala
+package com {
+  package laiboonh {
+    package impatient {
+      private[impatient] class Foo (bar:Int)
+    }
+    package fpinscala {
+      class FooBar(bar:Int) extends com.laiboonh.impatient.Foo(bar) //cannot compile because access limited by package
+    }
+  }
+}
+```
+#### Class access modifier.
+```scala
+private class Foo (bar:Int)
+
+class FooBar(bar:Int) extends Foo(bar) //cannot compile because cannot see class
+```
+#### Constructor access modifier. Primary constructor of Foo cannot be seen by subclass unless its `protected`
+```scala
+class Foo private(bar:Int)
+
+class FooBar(bar:Int) extends Foo(bar) //cannot compile because cannot access constructor
+```
+
 # Class private field vs. Object private field
 ```scala
 class Foo {
