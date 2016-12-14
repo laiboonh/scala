@@ -1,2 +1,2 @@
-class Person extends Serializable
+"hello" zip "world".mkString
 

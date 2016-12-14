@@ -1,5 +1,36 @@
+# Abstraction
+#### Abstracting parameter types
+```scala
+abstract class Addable[T](a:T) {
+  def add(b:T):T
+}
+
+implicit def intToAddable(a:Int): Addable[Int] = new Addable(a) { def add(b:Int):Int = a+b }
+implicit def stringToAddable(a:String): Addable[String] = new Addable(a) { def add(b:String):String = a + " " + b }
+implicit def doubleToAddable(a:Double): Addable[Double] = new Addable(a) { def add(b:Double):Double = a + b }
+
+def main(args:Array[String]):Unit = {
+  println(1 add 2)
+  println("hello" add "world")
+  println(1.2 add 2.3)
+}
+```
+#### Abstracting the operator
+```scala
+abstract class Addable[T](a:T) {
+  def binaryFunction(function:(T,T)=>T)(b:T):T
+}
+
+implicit def intToAddable(a:Int): Addable[Int] = new Addable(a) { def binaryFunction(function:(Int,Int)=>Int)(b:Int):Int = function(a,b) }
+  
+def main(args:Array[String]):Unit = {
+  println(1.binaryFunction((a,b)=>a+b)(2))
+  println(1.binaryFunction((a,b)=>a*b)(2))
+}
+```
+
 # Access modifiers
-### Field access modifier
+#### Field access modifier
 ```scala
 class Foo {
   protected val bar:Int = 32
