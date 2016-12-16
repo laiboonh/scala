@@ -1,3 +1,50 @@
+# Classes
+#### var field => generate getter, setter
+#### val field => generate getter
+#### private access modifier => private getter & setter
+#### private[this] => no getter or setter
+
+# Unapply
+#### unapply method can just test its input without extracting any value
+```scala
+object Name {
+  def unapply(name: String): Option[(String, String)] = {
+    val index = name.indexOf(' ')
+    if (index == -1) None
+    else Some(name.substring(0, index - 1), name.substring(index))
+  }
+}
+
+object IsCompound {
+  def unapply(name: String): Boolean = {
+    val index = name.indexOf(' ')
+    if (index == -1) false else true
+  }
+}
+
+Name.unapply("Peter van der Linden")
+
+"Peter van der Linden" match {
+  case Name(first, last@IsCompound()) => s"Success"
+  case _ => "Failure"
+}
+```
+#### if we want to match for a list of elements
+```scala
+object Name {
+  def unapplySeq(input:String):Option[Seq[String]] = {
+    if(input.trim=="") None
+    else Some(input.trim.split("\\s+"))
+  }
+}
+
+"Peter van der Linden" match {
+  case Name(first, last) => s"Success"
+  case Name(first, "van", "der", last) => s"I am van der" //match
+  case _ => "Failure"
+}
+```
+
 # Abstraction
 #### Abstracting parameter types
 ```scala
