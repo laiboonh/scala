@@ -1,3 +1,5 @@
+package com.essential.ch2
+
 object Oswald {
   val color = "Black"
   val food = "Milk"
@@ -8,8 +10,7 @@ object calc {
   def cube(d:Double):Double = square(d)*d
 }
 
-calc.square(2)
-calc.cube(2)
+
 
 
 object calc2 {
@@ -17,7 +18,7 @@ object calc2 {
   def cube(d:Int):Int = square(d)*d
 }
 
-calc2.square(2.0.toInt)
+
 
 object person {
   val firstName = "Bob"
@@ -26,6 +27,8 @@ object person {
 object alien {
   def greet(p:person.type) = s"hello ${p.firstName}"
 }
-alien.greet(person)
+
+
+
 
 
