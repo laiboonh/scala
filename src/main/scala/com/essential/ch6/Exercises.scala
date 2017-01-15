@@ -183,7 +183,7 @@ object Q6_5_1 {
 
 
   def calculator(operand1: String, operator: String, operand2: String): Unit = {
-    val result:Option[Int] = for {
+    val result: Option[Int] = for {
       op1 <- getInt(operand1)
       op2 <- getInt(operand2)
       ans <- operator match {
@@ -200,15 +200,16 @@ object Q6_5_1 {
   }
 
   def calculator1(operand1: String, operator: String, operand2: String): Unit = {
-    val result:Option[Int] = getInt(operand1) flatMap {
-      op1 => getInt(operand2) flatMap {
-        op2 => {
-          operator match {
-            case "+" => Some(op1+op2)
-            case _ => None
+    val result: Option[Int] = getInt(operand1) flatMap {
+      op1 =>
+        getInt(operand2) flatMap {
+          op2 => {
+            operator match {
+              case "+" => Some(op1 + op2)
+              case _ => None
+            }
           }
         }
-      }
     }
     result match {
       case None => println("Error")
@@ -231,5 +232,113 @@ object Q6_5_1 {
     //    assert(addOptions1(Some(1),None)==None)
     //    assert(addOptions(Some(1),Some(2),Some(3))==Some(6))
     //    assert(addOptions1(Some(1),Some(2),Some(3))==Some(6))
+  }
+}
+
+object Q6_6_2 {
+
+  import scala.util.Try
+
+  val opt1 = Some(1)
+  val opt2 = Some(2)
+  val opt3 = Some(3)
+
+  val seq1 = Seq(1)
+  val seq2 = Seq(2)
+  val seq3 = Seq(3)
+
+  val try1 = Try(1)
+  val try2 = Try(2)
+  val try3 = Try(3)
+
+  val res = for {
+  //    a <- opt1
+  //    b <- opt2
+  //    c <- opt3
+  //    a <- seq1
+  //    b <- seq2
+  //    c <- seq3
+    a <- try1
+    b <- try2
+    c <- try3
+  } yield a + b + c
+
+  def main(args: Array[String]): Unit = {
+    println(res)
+  }
+
+}
+
+object Q6_8_3 {
+  val people = Set(
+    "Alice",
+    "Bob",
+    "Charlie",
+    "Derek",
+    "Edith",
+    "Fred")
+
+  val ages = Map(
+    "Alice" -> 20,
+    "Bob" -> 30,
+    "Charlie" -> 50,
+    "Derek" -> 40,
+    "Edith" -> 10,
+    "Fred" -> 60)
+
+  val favoriteColors = Map(
+    "Bob" -> "green",
+    "Derek" -> "magenta",
+    "Fred" -> "yellow")
+
+  val favoriteLolcats = Map(
+    "Alice" -> "Long Cat",
+    "Charlie" -> "Ceiling Cat",
+    "Edith" -> "Cloud Cat")
+
+  def favouriteColor(name: String): Option[String] =
+    favoriteColors.get(name)
+
+  def favouriteColor1(name: String): String =
+    favoriteColors.getOrElse(name, "beige")
+
+  def printColors = people.foreach {
+    person => println(favoriteColors.get(person))
+  }
+
+  def lookup[A](name: String, info: Map[String, A]): Option[A] = info.get(name)
+
+  val oldestPerson: String = ages.reduceRight((entry, acc) => if (entry._2 > acc._2) entry else acc)._1
+
+  def union[A](set1: Set[A], set2: Set[A]): Set[A] = set1.foldLeft(set2) {
+    (acc, elem) => if (acc.contains(elem)) acc else acc + elem
+  }
+
+  def union[A](map1: Map[A, Int], map2: Map[A, Int]): Map[A, Int] = map1.foldLeft(map2) {
+    (acc, pair) =>
+      acc.get(pair._1) match {
+        case None => acc + pair
+        case Some(value) => acc + (pair._1 -> (pair._2 + value))
+      }
+  }
+
+  def union3[A, B](map1: Map[A, B], map2: Map[A, B])(add: (B,B) => B): Map[A, B] = map1.foldLeft(map2) {
+    (acc, pair) =>
+      acc.get(pair._1) match {
+        case None => acc + pair
+        case Some(value) => acc + (pair._1 -> add(pair._2, value))
+      }
+  }
+
+
+  def main(args: Array[String]): Unit = {
+    //    println(favouriteColor("Alice"))
+    //    println(favouriteColor1("Alice"))
+    //    printColors
+    //    println(favoriteColors.get(oldestPerson))
+
+    //    println(union(Set(1, 2, 3), Set(1, 2, 4, 5, 6)))
+    println(union(Map("a" -> 1, "b" -> 2), Map("a" -> 2, "b" -> 4)))
+    println(union3(Map("a" -> 1, "b" -> 2), Map("a" -> 2, "b" -> 4))((a,b)=>a+b))
   }
 }
